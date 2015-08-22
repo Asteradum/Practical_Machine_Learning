@@ -3,8 +3,8 @@ library(doParallel)
 library(caret)
 registerDoParallel(cores=5)
 
-this.dir <- dirname(parent.frame(2)$ofile)
-setwd(this.dir)
+#this.dir <- dirname(parent.frame(2)$ofile)
+#setwd(this.dir)
 
 # import numbers as numeric (imported as factor by default) and clean trash values
 training <- read.csv(file = "pml-training.csv", na.strings = c("", "NA" , "#DIV/0!" ), stringsAsFactors=FALSE)
@@ -25,8 +25,7 @@ training2 <- training2[,!(colnames(training2) %in% drops)]
 training2$user_name <- as.factor(training2$user_name)
 training2$classe <- as.factor(training2$classe)
 
-# Train model with Preprocessing, centering and scaling the values.
-modelFit <- train(classe~., method = "rf", preProcess = c("center", "scale"), data = training2)
+modelFit <- train(classe~., method = "rf", data = training2)
 # Train model with Preprocessing, centering and scaling the values.
 modelFitPP <- train(classe~., method = "rf", preProcess = c("center", "scale"), data = training2)
 
