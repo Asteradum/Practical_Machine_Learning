@@ -3,7 +3,8 @@ library(doParallel)
 library(caret)
 registerDoParallel(cores=5)
 
-# setwd("C:/Users/User/Documents/Coursera/Practical_Machine_Learning/CourseProject")
+this.dir <- dirname(parent.frame(2)$ofile)
+setwd(this.dir)
 
 # import numbers as numeric (imported as factor by default) and clean trash values
 training <- read.csv(file = "pml-training.csv", na.strings = c("", "NA" , "#DIV/0!" ), stringsAsFactors=FALSE)
@@ -24,18 +25,35 @@ training2 <- training2[,!(colnames(training2) %in% drops)]
 training2$user_name <- as.factor(training2$user_name)
 training2$classe <- as.factor(training2$classe)
 
-
-#Preprocess? Which one is best?
-# Cross-validation
-#Check which ones were errors
-
-
+# Train model with Preprocessing, centering and scaling the values.
+modelFit <- train(classe~., method = "rf", preProcess = c("center", "scale"), data = training2)
+# Train model with Preprocessing, centering and scaling the values.
 modelFitPP <- train(classe~., method = "rf", preProcess = c("center", "scale"), data = training2)
 
-testing2 <- testing[,colnames(testing) %in%colnames(training2)]
-predictTest <- predict(modelFit,testing2)
-modelFit$finalModel
-# result <- predict(modelFit, training2)
-# correct <- result == training2$classe
-# wrongvalues <- training2[!correct,]
-# unique(correct)
+modelFit$results
+modelFitPP$results
+
+# The model works better without preprocessing
+
+# Cross-validation
+# There is no needs to use cross-validation if using random forest, as the algorithm itself creates multiple trees
+# Random forest avoids overfitting.
+
+
+# Check which ones were errors
+check <- predict(modelFit,training2)
+errors <- training2[training2$classe != check,]
+errors
+
+# Testing
+answers <- predict(modelFit,testing)
+
+# delivery
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+pml_write_files(answers)
