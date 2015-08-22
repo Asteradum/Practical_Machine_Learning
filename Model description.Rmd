@@ -9,7 +9,7 @@ library(randomForest)
 ---
 title: "Practical Machine Learning Project"
 author: "Alvaro Martin Orive"
-output: html_document
+output: markdown_github 
 ---
 
 The purpose of this document is to describe the machine learning algorithm used, with the steps taken to define it.
