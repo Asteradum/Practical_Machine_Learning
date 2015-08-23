@@ -1,3 +1,7 @@
+---
+output: md_document
+---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE)
 library(doParallel)
@@ -6,11 +10,10 @@ registerDoParallel(cores=5)
 library(randomForest)
 ```
 
----
-title: "Practical Machine Learning Project"
-author: "Alvaro Martin Orive"
-output: markdown_github 
----
+
+#Practical Machine Learning Project
+
+author: Alvaro Martin Orive
 
 The purpose of this document is to describe the machine learning algorithm used, with the steps taken to define it.
 
@@ -74,7 +77,7 @@ WE are going to run two models, one with preprocess and another one without. All
 
 As said previously, there is no need to cross-validate using Random Forests. We will use caret default parameters.
 
-```{r, eval=FALSE}
+```{r}
 modelFit <- train(classe~., method = "rf", data = training2)
 # Train model with Preprocessing, centering and scaling the values.
 modelFitPP <- train(classe~., method = "rf", preProcess = c("center", "scale"), data = training2)
